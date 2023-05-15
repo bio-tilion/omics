@@ -1,6 +1,6 @@
 # This file was produced by samtools stats (1.17+htslib-1.17) and can be plotted using plot-bamstats
 # This file contains statistics for all reads.
-# The command line was:  stats output/part_1/Negative_trim.bam
+# The command line was:  stats output/part1/Negative_trim.bam
 # CHK, Checksum	[2]Read Names	[3]Sequences	[4]Qualities
 # CHK, CRC32 of reads which passed filtering followed by addition (32bit overflow)
 CHK	1682467e	99fcccf5	90b3895f

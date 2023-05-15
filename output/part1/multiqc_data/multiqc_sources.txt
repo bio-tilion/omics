@@ -1,15 +1,15 @@
 Module	Section	Sample Name	Source
-Samtools	stats	Negative_stats	/home/palby/omics/output/part_1/Negative_stats.txt
-Samtools	stats	Negative_cutadapt_stats	/home/palby/omics/output/part_1/Negative_cutadapt_stats.txt
-Samtools	stats	Negative_local_stats	/home/palby/omics/output/part_1/Negative_local_stats.txt
-Samtools	stats	Negative_trim_stats	/home/palby/omics/output/part_1/Negative_trim_stats.txt
-Samtools	flagstat	Negative_flagstat	/home/palby/omics/output/part_1/Negative_flagstat.txt
-Samtools	flagstat	Negative_trim_flagstat	/home/palby/omics/output/part_1/Negative_trim_flagstat.txt
-Samtools	flagstat	Negative_local_flagstat	/home/palby/omics/output/part_1/Negative_local_flagstat.txt
-Samtools	flagstat	Negative_cutadapt_flagstat	/home/palby/omics/output/part_1/Negative_cutadapt_flagstat.txt
-Bowtie 2 / HiSAT2	all_sections	Negative_bowtie_stats	/home/palby/omics/output/part_1/Negative_bowtie_stats.txt
-Bowtie 2 / HiSAT2	all_sections	Negative_trim_bowtie_stats	/home/palby/omics/output/part_1/Negative_trim_bowtie_stats.txt
-Bowtie 2 / HiSAT2	all_sections	Negative_local_bowtie_stats	/home/palby/omics/output/part_1/Negative_local_bowtie_stats.txt
-Bowtie 2 / HiSAT2	all_sections	Negative_cutadapt_bowtie_stats	/home/palby/omics/output/part_1/Negative_cutadapt_bowtie_stats.txt
-FastQC	all_sections	trimmed_N_Negative	/home/palby/omics/input/part_1/fastq/trimmed_N_Negative_fastqc/fastqc_data.txt
-FastQC	all_sections	trimmed_Negative	/home/palby/omics/input/part_1/fastq/trimmed_Negative_fastqc/fastqc_data.txt
+Samtools	stats	Negative_stats	/home/palby/omics/output/part1/Negative_stats.txt
+Samtools	stats	Negative_cutadapt_stats	/home/palby/omics/output/part1/Negative_cutadapt_stats.txt
+Samtools	stats	Negative_local_stats	/home/palby/omics/output/part1/Negative_local_stats.txt
+Samtools	stats	Negative_trim_stats	/home/palby/omics/output/part1/Negative_trim_stats.txt
+Samtools	flagstat	Negative_flagstat	/home/palby/omics/output/part1/Negative_flagstat.txt
+Samtools	flagstat	Negative_trim_flagstat	/home/palby/omics/output/part1/Negative_trim_flagstat.txt
+Samtools	flagstat	Negative_local_flagstat	/home/palby/omics/output/part1/Negative_local_flagstat.txt
+Samtools	flagstat	Negative_cutadapt_flagstat	/home/palby/omics/output/part1/Negative_cutadapt_flagstat.txt
+Bowtie 2 / HiSAT2	all_sections	Negative_bowtie_stats	/home/palby/omics/output/part1/Negative_bowtie_stats.txt
+Bowtie 2 / HiSAT2	all_sections	Negative_trim_bowtie_stats	/home/palby/omics/output/part1/Negative_trim_bowtie_stats.txt
+Bowtie 2 / HiSAT2	all_sections	Negative_local_bowtie_stats	/home/palby/omics/output/part1/Negative_local_bowtie_stats.txt
+Bowtie 2 / HiSAT2	all_sections	Negative_cutadapt_bowtie_stats	/home/palby/omics/output/part1/Negative_cutadapt_bowtie_stats.txt
+FastQC	all_sections	trimmed_N_Negative	/home/palby/omics/input/part1/fastq/trimmed_N_Negative_fastqc/fastqc_data.txt
+FastQC	all_sections	trimmed_Negative	/home/palby/omics/input/part1/fastq/trimmed_Negative_fastqc/fastqc_data.txt

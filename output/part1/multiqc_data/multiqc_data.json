@@ -2,30 +2,30 @@
     "report_data_sources": {
         "Samtools": {
             "stats": {
-                "Negative_stats": "/home/palby/omics/output/part_1/Negative_stats.txt",
-                "Negative_cutadapt_stats": "/home/palby/omics/output/part_1/Negative_cutadapt_stats.txt",
-                "Negative_local_stats": "/home/palby/omics/output/part_1/Negative_local_stats.txt",
-                "Negative_trim_stats": "/home/palby/omics/output/part_1/Negative_trim_stats.txt"
+                "Negative_stats": "/home/palby/omics/output/part1/Negative_stats.txt",
+                "Negative_cutadapt_stats": "/home/palby/omics/output/part1/Negative_cutadapt_stats.txt",
+                "Negative_local_stats": "/home/palby/omics/output/part1/Negative_local_stats.txt",
+                "Negative_trim_stats": "/home/palby/omics/output/part1/Negative_trim_stats.txt"
             },
             "flagstat": {
-                "Negative_flagstat": "/home/palby/omics/output/part_1/Negative_flagstat.txt",
-                "Negative_trim_flagstat": "/home/palby/omics/output/part_1/Negative_trim_flagstat.txt",
-                "Negative_local_flagstat": "/home/palby/omics/output/part_1/Negative_local_flagstat.txt",
-                "Negative_cutadapt_flagstat": "/home/palby/omics/output/part_1/Negative_cutadapt_flagstat.txt"
+                "Negative_flagstat": "/home/palby/omics/output/part1/Negative_flagstat.txt",
+                "Negative_trim_flagstat": "/home/palby/omics/output/part1/Negative_trim_flagstat.txt",
+                "Negative_local_flagstat": "/home/palby/omics/output/part1/Negative_local_flagstat.txt",
+                "Negative_cutadapt_flagstat": "/home/palby/omics/output/part1/Negative_cutadapt_flagstat.txt"
             }
         },
         "Bowtie 2 / HiSAT2": {
             "all_sections": {
-                "Negative_bowtie_stats": "/home/palby/omics/output/part_1/Negative_bowtie_stats.txt",
-                "Negative_trim_bowtie_stats": "/home/palby/omics/output/part_1/Negative_trim_bowtie_stats.txt",
-                "Negative_local_bowtie_stats": "/home/palby/omics/output/part_1/Negative_local_bowtie_stats.txt",
-                "Negative_cutadapt_bowtie_stats": "/home/palby/omics/output/part_1/Negative_cutadapt_bowtie_stats.txt"
+                "Negative_bowtie_stats": "/home/palby/omics/output/part1/Negative_bowtie_stats.txt",
+                "Negative_trim_bowtie_stats": "/home/palby/omics/output/part1/Negative_trim_bowtie_stats.txt",
+                "Negative_local_bowtie_stats": "/home/palby/omics/output/part1/Negative_local_bowtie_stats.txt",
+                "Negative_cutadapt_bowtie_stats": "/home/palby/omics/output/part1/Negative_cutadapt_bowtie_stats.txt"
             }
         },
         "FastQC": {
             "all_sections": {
-                "trimmed_N_Negative": "/home/palby/omics/input/part_1/fastq/trimmed_N_Negative_fastqc/fastqc_data.txt",
-                "trimmed_Negative": "/home/palby/omics/input/part_1/fastq/trimmed_Negative_fastqc/fastqc_data.txt"
+                "trimmed_N_Negative": "/home/palby/omics/input/part1/fastq/trimmed_N_Negative_fastqc/fastqc_data.txt",
+                "trimmed_Negative": "/home/palby/omics/input/part1/fastq/trimmed_Negative_fastqc/fastqc_data.txt"
             }
         }
     },
@@ -784,7 +784,7 @@
             }
         }
     ],
-    "report_multiqc_command": "/home/palby/mambaforge/envs/omics/bin/multiqc input/part_1/ output/part_1/ -f -o output/part_1/",
+    "report_multiqc_command": "/home/palby/mambaforge/envs/omics/bin/multiqc input/part1/ output/part1/ -f -o output/part1/",
     "report_plot_data": {
         "samtools_alignment_plot": {
             "plot_type": "bar_graph",
@@ -4952,14 +4952,14 @@
         }
     },
     "config_analysis_dir_abs": [
-        "/home/palby/omics/input/part_1",
-        "/home/palby/omics/output/part_1"
+        "/home/palby/omics/input/part1",
+        "/home/palby/omics/output/part1"
     ],
     "config_analysis_dir": [
-        "input/part_1/",
-        "output/part_1/"
+        "input/part1/",
+        "output/part1/"
     ],
-    "config_creation_date": "2023-05-15, 16:57 BST",
+    "config_creation_date": "2023-05-15, 23:43 BST",
     "config_git_hash": null,
     "config_intro_text": null,
     "config_report_comment": null,

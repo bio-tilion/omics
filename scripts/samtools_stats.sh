@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # Assign list of SAM files
-FILES=output/part_1/*.sam
+FILES=output/part1/*.sam
 
 for file in $FILES
 do

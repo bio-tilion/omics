@@ -24,11 +24,11 @@ conda env create --file omics-env.txt
 ## Original reads from the practical
 The FastQC report on the `Negative.fq` from the practical only flagged `Per base sequence quality` and `Per base N content`.
 
-![Per base sequence quality](../input/part_1/fastq/trimmed_Negative_fastqc/Images/per_base_quality.png)
+![Per base sequence quality](../input/part1/fastq/trimmed_Negative_fastqc/Images/per_base_quality.png)
 
 The graph clearly shows that the reads all have very high quality in all positions but the first five and last four positions.
 
-![Per base N content](../input/part_1/fastq/trimmed_Negative_fastqc/Images/per_base_n_content.png)
+![Per base N content](../input/part1/fastq/trimmed_Negative_fastqc/Images/per_base_n_content.png)
 
 The N content graph shows that those above mentioned positions are N calls, which are present in all reads. N calls occur when during sequencing there is not enough confidence to make a base call (A, T, C, or G), so a "wildcard" base is introduced.
 
@@ -38,7 +38,7 @@ During the practical, we have always aligned the reads with the `--end-to-end` s
 One possible alternative is to perform the alignment using the `--local` setting, which performs a local alignment resulting in possible clipping of the extremities. In this case it should be able to provide an alignment and *soft-clip* the polyN head and tail.
 
 ```
-bowtie2 --local --all -x input/part_1/genome/AFPN02.1_merge -q input/part_1/fastq/trimmed_Negative.fq -S output/part_1/Negative_local.sam >& output/part_1/Negative_local_bowtie_stats.txt
+bowtie2 --local --all -x input/part1/genome/AFPN02.1_merge -q input/part1/fastq/trimmed_Negative.fq -S output/part1/Negative_local.sam >& output/part1/Negative_local_bowtie_stats.txt
 ```
 
 Unfortunately, the output of the bowtie2 command (`Negative_local_bowtie_stats.txt`) confirms that none of the reads have been aligned:
@@ -54,7 +54,7 @@ Unfortunately, the output of the bowtie2 command (`Negative_local_bowtie_stats.t
 Another possible solution is to pass to `bowtie2` the number of bases to trim, using `--trim5` (or `-5`) and `--trim3` (or `-3`) followed by the number of positions. In this case, I have kept the original alignment setting and set to remove the N bases reported by the FastQC report -- the first 5 bases, and the last 4 of each read. 
 
 ```
-bowtie2 --end-to-end --all -x input/part_1/genome/AFPN02.1_merge -q input/part_1/fastq/trimmed_Negative.fq -5 5 -3 4 -S output/part_1/Negative_trim.sam >& output/part_1/Negative_trim_bowtie_stats.txt
+bowtie2 --end-to-end --all -x input/part1/genome/AFPN02.1_merge -q input/part1/fastq/trimmed_Negative.fq -5 5 -3 4 -S output/part1/Negative_trim.sam >& output/part1/Negative_trim_bowtie_stats.txt
 ```
 
 This time, the output (`Negative_trim_bowtie_stats.txt`) confirms that it has produced an alignment to the reference genome with an overall alignment rate of 99.97%:
@@ -73,12 +73,12 @@ As a slightly different alternative, I have also tried to include trimming of th
 
 In this case, I have used the `trimmed_Negative.fq` file which was already the output of `cutadapt` in the practical, but the trim option could have been combined with the de-multiplexing command too.
 ```
-cutadapt --trim-n -o input/part_1/fastq/trimmed_N_Negative.fq input/part_1/fastq/trimmed_Negative.fq
+cutadapt --trim-n -o input/part1/fastq/trimmed_N_Negative.fq input/part1/fastq/trimmed_Negative.fq
 ```
 
 A new FastQC report now shows that all the reads have sufficient quality in all positions. 
 
-![Per base sequence quality after N trimming with `cutadapt`](../input/part_1/fastq/trimmed_N_Negative_fastqc/Images/per_base_quality.png)
+![Per base sequence quality after N trimming with `cutadapt`](../input/part1/fastq/trimmed_N_Negative_fastqc/Images/per_base_quality.png)
 
 The following is the `summary.txt` file confirming that all tests have passed:
 ```
@@ -96,7 +96,7 @@ PASS    Adapter Content trimmed_N_Negative.fq
 
 I have then produced a new alignment with the following code:
 ```
-bowtie2 --end-to-end --all -x input/part_1/genome/AFPN02.1_merge -q input/part_1/fastq/trimmed_N_Negative.fq -S output/part_1/Negative_cutadapt.sam >& output/part_1/Negative_cutadapt_bowtie_stats.txt
+bowtie2 --end-to-end --all -x input/part1/genome/AFPN02.1_merge -q input/part1/fastq/trimmed_N_Negative.fq -S output/part1/Negative_cutadapt.sam >& output/part1/Negative_cutadapt_bowtie_stats.txt
 ```
 
 The output (`Negative_cutadapt_bowtie_stats.txt`) reports the same results as the alignment achieved with `bowtie2` and the trim options:
@@ -115,7 +115,7 @@ In order to obtain all the mapping statistics, I wrote this short script -- `scr
 #!/usr/bin/bash
 
 # Assign list of SAM files
-FILES=output/part_1/*.sam
+FILES=output/part1/*.sam
 
 for file in $FILES
 do
@@ -136,12 +136,19 @@ do
 done
 ```
 
+I have then made it executable and ran it with the following commands:
+```
+chmod +x scripts/samtools_stats.sh
+./scripts/samtools_stats.sh
+```
+
+
 Finally, I have produced a summary of all statistics with the following command:
 ```
-multiqc input/part_1/ output/part_1/ -f -o output/part_1/
+multiqc input/part1/ output/part1/ -f -o output/part1/
 ```
 
 The report can be accessed at `output/part_1/multiqc_report.html`.
 
 ## Conclusion
-![IGV snapshot of aligned reads](../output/part_1/igv_snapshot.png)
+![IGV snapshot of aligned reads](../output/part1/igv_snapshot.png)
