@@ -1,0 +1,10 @@
+PASS	Basic Statistics	trimmed_N_Negative.fq
+PASS	Per base sequence quality	trimmed_N_Negative.fq
+PASS	Per sequence quality scores	trimmed_N_Negative.fq
+PASS	Per base sequence content	trimmed_N_Negative.fq
+PASS	Per sequence GC content	trimmed_N_Negative.fq
+PASS	Per base N content	trimmed_N_Negative.fq
+PASS	Sequence Length Distribution	trimmed_N_Negative.fq
+PASS	Sequence Duplication Levels	trimmed_N_Negative.fq
+PASS	Overrepresented sequences	trimmed_N_Negative.fq
+PASS	Adapter Content	trimmed_N_Negative.fq
