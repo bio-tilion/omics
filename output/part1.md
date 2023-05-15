@@ -20,6 +20,15 @@ Calling the following command will recreate my environment with all the necessar
 conda env create --file omics-env.txt
 ```
    
+## Repository
+This work is available at this [GitHub repository](https://github.com/bio-tilion/omics). Because of GitHub restrictions, files bigger than 100Mb cannot be included, therefore, all SAM (`.sam`) and FASTQ (`.fq`) files are not present.
+
+Despite this, the full pipeline can still be run because a compressed file of the original FASTQ is included -- `trimmed_Negative.fq.zip`. Simply decompress it by calling this command from the main folder:
+```
+unzip input/part1/fastq/trimmed_Negative.fq.zip
+```
+
+Among the output files, I have also included in the repository all BAM files and their indices.
 
 ## Original reads from the practical
 The FastQC report on the `Negative.fq` from the practical only flagged `Per base sequence quality` and `Per base N content`.
@@ -151,4 +160,10 @@ multiqc input/part1/ output/part1/ -f -o output/part1/
 The report can be accessed at `output/part_1/multiqc_report.html`.
 
 ## Conclusion
+Together with the MultiQC report, the following screenshot of the alignments shows that I was able to produce two virtually identical alignments by trimming the N call positions (second and last from the top).
+
 ![IGV snapshot of aligned reads](../output/part1/igv_snapshot.png)
+
+In this toy example, the result was the same, but I would argue that my last solution -- using `cutadapt` for N trimming -- should give more consistent results for a general pipeline in a real life scenario. With `bowtie2` I was able to remove the same number of bases at the extremities of each read, which in this case worked because the FastQC report states that 100% of the reads have N calls in those positions. `cutadapt` instead "iterates" through all reads and removes all N bases from the extremities, regardless of their number; so if one read have extra or fewer Ns, the output will always contain no Ns (unless they are in between other bases).
+
+Finally, in principle the local alignment approach should have worked, but I probably had to alter `bowtie2` default behaviour by changing the number of allowed mismatched and the length of the seed substring, which I believe would have produced a worse alignment than the one I obtained anyway. 

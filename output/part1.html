@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Alberto Locca" />
+  <title>Omics coursework - Part 1</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="/usr/share/apostrophe/media/css/web/adwaita.css" />
+  <style>
+    .task-list-item {
+      list-style-type: none;
+    }
+    .task-list-item-checkbox {
+      margin-left: -1.6em;
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Omics coursework - Part 1</h1>
+<p class="author">Alberto Locca</p>
+</header>
+<h2 id="working-environment">Working environment</h2>
+<p>I have performed both the NGS practical and all the coursework
+locally on my machine, therefore I had prepared a new <code>conda</code>
+environment and installed the necessary software with the following
+command:</p>
+<pre><code>conda install cutadapt bowtie2 samtools fastqc multiqc igv</code></pre>
+<p>I then saved the environment for future use:</p>
+<pre><code>conda list --explicit &gt; omics-env.txt</code></pre>
+<p>Calling the following command will recreate my environment with all
+the necessary software and its dependencies:</p>
+<pre><code>conda env create --file omics-env.txt</code></pre>
+<h2 id="repository">Repository</h2>
+<p>This work is available at this <a
+href="https://github.com/bio-tilion/omics">GitHub repository</a>.
+Because of GitHub restrictions, files bigger than 100Mb cannot be
+included, therefore, all SAM (<code>.sam</code>) and FASTQ
+(<code>.fq</code>) files are not present.</p>
+<p>Despite this, the full pipeline can still be run because a compressed
+file of the original FASTQ is included –
+<code>trimmed_Negative.fq.zip</code>. Simply decompress it by calling
+this command from the main folder:</p>
+<pre><code>unzip input/part1/fastq/trimmed_Negative.fq.zip</code></pre>
+<p>Among the output files, I have also included in the repository all
+BAM files and their indices.</p>
+<h2 id="original-reads-from-the-practical">Original reads from the
+practical</h2>
+<p>The FastQC report on the <code>Negative.fq</code> from the practical
+only flagged <code>Per base sequence quality</code> and
+<code>Per base N content</code>.</p>
+<figure>
+<img
+src="/home/palby/omics/output/../input/part1/fastq/trimmed_Negative_fastqc/Images/per_base_quality.png"
+alt="Per base sequence quality" />
+<figcaption aria-hidden="true">Per base sequence quality</figcaption>
+</figure>
+<p>The graph clearly shows that the reads all have very high quality in
+all positions but the first five and last four positions.</p>
+<figure>
+<img
+src="/home/palby/omics/output/../input/part1/fastq/trimmed_Negative_fastqc/Images/per_base_n_content.png"
+alt="Per base N content" />
+<figcaption aria-hidden="true">Per base N content</figcaption>
+</figure>
+<p>The N content graph shows that those above mentioned positions are N
+calls, which are present in all reads. N calls occur when during
+sequencing there is not enough confidence to make a base call (A, T, C,
+or G), so a “wildcard” base is introduced.</p>
+<h2 id="mapping-options">Mapping options</h2>
+<p>During the practical, we have always aligned the reads with the
+<code>--end-to-end</code> setting, which tries to align each read from
+the first to the last position to the reference genome. In this case, it
+failed to provide any alignment because it could not find any match to
+the Ns starting sequences.</p>
+<p>One possible alternative is to perform the alignment using the
+<code>--local</code> setting, which performs a local alignment resulting
+in possible clipping of the extremities. In this case it should be able
+to provide an alignment and <em>soft-clip</em> the polyN head and
+tail.</p>
+<pre><code>bowtie2 --local --all -x input/part1/genome/AFPN02.1_merge -q input/part1/fastq/trimmed_Negative.fq -S output/part1/Negative_local.sam &gt;&amp; output/part1/Negative_local_bowtie_stats.txt</code></pre>
+<p>Unfortunately, the output of the bowtie2 command
+(<code>Negative_local_bowtie_stats.txt</code>) confirms that none of the
+reads have been aligned:</p>
+<pre><code>1076320 reads; of these:
+  1076320 (100.00%) were unpaired; of these:
+    1076320 (100.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    0 (0.00%) aligned &gt;1 times
+0.00% overall alignment rate</code></pre>
+<p>Another possible solution is to pass to <code>bowtie2</code> the
+number of bases to trim, using <code>--trim5</code> (or <code>-5</code>)
+and <code>--trim3</code> (or <code>-3</code>) followed by the number of
+positions. In this case, I have kept the original alignment setting and
+set to remove the N bases reported by the FastQC report – the first 5
+bases, and the last 4 of each read.</p>
+<pre><code>bowtie2 --end-to-end --all -x input/part1/genome/AFPN02.1_merge -q input/part1/fastq/trimmed_Negative.fq -5 5 -3 4 -S output/part1/Negative_trim.sam &gt;&amp; output/part1/Negative_trim_bowtie_stats.txt</code></pre>
+<p>This time, the output (<code>Negative_trim_bowtie_stats.txt</code>)
+confirms that it has produced an alignment to the reference genome with
+an overall alignment rate of 99.97%:</p>
+<pre><code>1076320 reads; of these:
+  1076320 (100.00%) were unpaired; of these:
+    308 (0.03%) aligned 0 times
+    1020237 (94.79%) aligned exactly 1 time
+    55775 (5.18%) aligned &gt;1 times
+99.97% overall alignment rate</code></pre>
+<p>This is confirmation that the alignment failed because of the N calls
+in the reads.</p>
+<p>As a slightly different alternative, I have also tried to include
+trimming of the N calls into the pipeline. This could be achieved during
+the “de-multiplexing” step using <code>cutadapt</code>, by passing the
+option <code>--trim-n</code>, which removes Ns at both ends of the
+reads.</p>
+<p>In this case, I have used the <code>trimmed_Negative.fq</code> file
+which was already the output of <code>cutadapt</code> in the practical,
+but the trim option could have been combined with the de-multiplexing
+command too.</p>
+<pre><code>cutadapt --trim-n -o input/part1/fastq/trimmed_N_Negative.fq input/part1/fastq/trimmed_Negative.fq</code></pre>
+<p>A new FastQC report now shows that all the reads have sufficient
+quality in all positions.</p>
+<figure>
+<img
+src="/home/palby/omics/output/../input/part1/fastq/trimmed_N_Negative_fastqc/Images/per_base_quality.png"
+alt="Per base sequence quality after N trimming with cutadapt" />
+<figcaption aria-hidden="true">Per base sequence quality after N
+trimming with <code>cutadapt</code></figcaption>
+</figure>
+<p>The following is the <code>summary.txt</code> file confirming that
+all tests have passed:</p>
+<pre><code>PASS    Basic Statistics        trimmed_N_Negative.fq
+PASS    Per base sequence quality       trimmed_N_Negative.fq
+PASS    Per sequence quality scores     trimmed_N_Negative.fq
+PASS    Per base sequence content       trimmed_N_Negative.fq
+PASS    Per sequence GC content trimmed_N_Negative.fq
+PASS    Per base N content      trimmed_N_Negative.fq
+PASS    Sequence Length Distribution    trimmed_N_Negative.fq
+PASS    Sequence Duplication Levels     trimmed_N_Negative.fq
+PASS    Overrepresented sequences       trimmed_N_Negative.fq
+PASS    Adapter Content trimmed_N_Negative.fq</code></pre>
+<p>I have then produced a new alignment with the following code:</p>
+<pre><code>bowtie2 --end-to-end --all -x input/part1/genome/AFPN02.1_merge -q input/part1/fastq/trimmed_N_Negative.fq -S output/part1/Negative_cutadapt.sam &gt;&amp; output/part1/Negative_cutadapt_bowtie_stats.txt</code></pre>
+<p>The output (<code>Negative_cutadapt_bowtie_stats.txt</code>) reports
+the same results as the alignment achieved with <code>bowtie2</code> and
+the trim options:</p>
+<pre><code>1076320 reads; of these:
+  1076320 (100.00%) were unpaired; of these:
+    308 (0.03%) aligned 0 times
+    1020237 (94.79%) aligned exactly 1 time
+    55775 (5.18%) aligned &gt;1 times
+99.97% overall alignment rate</code></pre>
+<h2 id="final-mapping-statistics">Final mapping statistics</h2>
+<p>In order to obtain all the mapping statistics, I wrote this short
+script – <code>script/samtools_stats.sh</code> – that iterates through
+the SAM alignment files:</p>
+<pre><code>#!/usr/bin/bash
+
+# Assign list of SAM files
+FILES=output/part1/*.sam
+
+for file in $FILES
+do
+        # Get filename (with path) but the extension
+        fname=&quot;${file%.*}&quot;
+
+        # Convert SAM file to BAM
+        samtools sort &quot;$file&quot; &gt; &quot;$fname&quot;.bam
+
+        # Index the BAM file
+        samtools index &quot;$fname&quot;.bam
+
+        # Get alignment statistics
+        samtools stats &quot;$fname&quot;.bam &gt; &quot;$fname&quot;_stats.txt
+
+        # Get flagstat statistics
+        samtools flagstat &quot;$fname&quot;.bam &gt; &quot;$fname&quot;_flagstat.txt
+done</code></pre>
+<p>I have then made it executable and ran it with the following
+commands:</p>
+<pre><code>chmod +x scripts/samtools_stats.sh
+./scripts/samtools_stats.sh</code></pre>
+<p>Finally, I have produced a summary of all statistics with the
+following command:</p>
+<pre><code>multiqc input/part1/ output/part1/ -f -o output/part1/</code></pre>
+<p>The report can be accessed at
+<code>output/part_1/multiqc_report.html</code>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Together with the MultiQC report, the following screenshot of the
+alignments shows that I was able to produce two virtually identical
+alignments by trimming the N call positions (second and last from the
+top).</p>
+<figure>
+<img src="/home/palby/omics/output/../output/part1/igv_snapshot.png"
+alt="IGV snapshot of aligned reads" />
+<figcaption aria-hidden="true">IGV snapshot of aligned
+reads</figcaption>
+</figure>
+<p>In this toy example, the result was the same, but I would argue that
+my last solution – using <code>cutadapt</code> for N trimming – should
+give more consistent results for a general pipeline in a real life
+scenario. With <code>bowtie2</code> I was able to remove the same number
+of bases at the extremities of each read, which in this case worked
+because the FastQC report states that 100% of the reads have N calls in
+those positions. <code>cutadapt</code> instead “iterates” through all
+reads and removes all N bases from the extremities, regardless of their
+number; so if one read have extra or fewer Ns, the output will always
+contain no Ns (unless they are in between other bases).</p>
+<p>Finally, in principle the local alignment approach should have
+worked, but I probably had to alter <code>bowtie2</code> default
+behaviour by changing the number of allowed mismatched and the length of
+the seed substring, which I believe would have produced a worse
+alignment than the one I obtained anyway.</p>
+</body>
+</html>
