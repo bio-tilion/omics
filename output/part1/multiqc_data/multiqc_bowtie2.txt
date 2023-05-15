@@ -1,0 +1,5 @@
+Sample	total_reads	unpaired_total	unpaired_aligned_none	unpaired_aligned_one	unpaired_aligned_multi	overall_alignment_rate
+Negative_bowtie_stats	1076320	1076320	1076320	0	0	0.0
+Negative_cutadapt_bowtie_stats	1076320	1076320	308	1020237	55775	99.97
+Negative_local_bowtie_stats	1076320	1076320	1076320	0	0	0.0
+Negative_trim_bowtie_stats	1076320	1076320	308	1020237	55775	99.97

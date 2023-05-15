@@ -1,0 +1,15 @@
+Sample	Samtools_mqc-generalstats-samtools-error_rate	Samtools_mqc-generalstats-samtools-non_primary_alignments	Samtools_mqc-generalstats-samtools-reads_mapped	Samtools_mqc-generalstats-samtools-reads_mapped_percent	Samtools_mqc-generalstats-samtools-reads_properly_paired_percent	Samtools_mqc-generalstats-samtools-reads_MQ0_percent	Samtools_mqc-generalstats-samtools-raw_total_sequences	Samtools_mqc-generalstats-samtools-flagstat_total	Samtools_mqc-generalstats-samtools-mapped_passed	Samtools_mqc-generalstats-samtools-mapped_passed_pct	Bowtie 2 / HiSAT2_mqc-generalstats-bowtie_2_hisat2-overall_alignment_rate	FastQC_mqc-generalstats-fastqc-percent_duplicates	FastQC_mqc-generalstats-fastqc-percent_gc	FastQC_mqc-generalstats-fastqc-avg_sequence_length	FastQC_mqc-generalstats-fastqc-median_sequence_length	FastQC_mqc-generalstats-fastqc-percent_fails	FastQC_mqc-generalstats-fastqc-total_sequences
+Negative_bowtie_stats											0.0						
+Negative_cutadapt_bowtie_stats											99.97						
+Negative_cutadapt_flagstat								1205364	1205056	99.97							
+Negative_cutadapt_stats	0.001135322	129044.0	1076012.0	99.97138397502601	0.0	0.0002787275159803776	1076320.0										
+Negative_flagstat								1076320	0	0.0							
+Negative_local_bowtie_stats											0.0						
+Negative_local_flagstat								1076320	0	0.0							
+Negative_local_stats	0.0	0.0	0.0	0.0	0.0	0.0	1076320.0										
+Negative_stats	0.0	0.0	0.0	0.0	0.0	0.0	1076320.0										
+Negative_trim_bowtie_stats											99.97						
+Negative_trim_flagstat								1205364	1205056	99.97							
+Negative_trim_stats	0.001135322	129044.0	1076012.0	99.97138397502601	0.0	0.0002787275159803776	1076320.0										
+trimmed_N_Negative												4.605406609901678	50.0	50.0	50	0.0	1076320.0
+trimmed_Negative												4.676175922765708	50.0	59.0	59	20.0	1076320.0

@@ -1,0 +1,27 @@
+[2023-05-15 16:57:21,427] multiqc                                            [DEBUG  ]  This is MultiQC v1.14
+[2023-05-15 16:57:21,427] multiqc                                            [DEBUG  ]  Command used: /home/palby/mambaforge/envs/omics/bin/multiqc input/part_1/ output/part_1/ -f -o output/part_1/
+[2023-05-15 16:57:21,809] multiqc                                            [DEBUG  ]  Latest MultiQC version is v1.14
+[2023-05-15 16:57:21,809] multiqc                                            [DEBUG  ]  Working dir : /home/palby/omics
+[2023-05-15 16:57:21,809] multiqc                                            [DEBUG  ]  Template    : default
+[2023-05-15 16:57:21,809] multiqc                                            [DEBUG  ]  Running Python 3.10.9 (main, Jan 11 2023, 15:21:40) [GCC 11.2.0]
+[2023-05-15 16:57:21,810] multiqc                                            [DEBUG  ]  Analysing modules: custom_content, ccs, ngsderive, purple, conpair, lima, peddy, somalier, methylQA, mosdepth, phantompeakqualtools, qualimap, preseq, hifiasm, quast, qorts, rna_seqc, rockhopper, rsem, rseqc, busco, bustools, goleft_indexcov, gffcompare, disambiguate, supernova, deeptools, sargasso, verifybamid, mirtrace, happy, mirtop, sambamba, gopeaks, homer, hops, macs2, theta2, snpeff, gatk, htseq, bcftools, featureCounts, fgbio, dragen, dragen_fastqc, dedup, pbmarkdup, damageprofiler, biobambam2, jcvi, mtnucratio, picard, vep, sentieon, prokka, qc3C, nanostat, samblaster, samtools, sexdeterrmine, eigenstratdatabasetools, bamtools, jellyfish, vcftools, longranger, stacks, varscan2, snippy, umitools, bbmap, bismark, biscuit, diamond, hicexplorer, hicup, hicpro, salmon, kallisto, slamdunk, star, hisat2, tophat, bowtie2, bowtie1, cellranger, snpsplit, odgi, pangolin, nextclade, humid, kat, leehom, adapterRemoval, bbduk, clipandmerge, cutadapt, flexbar, kaiju, kraken, malt, motus, trimmomatic, sickle, skewer, sortmerna, biobloomtools, fastq_screen, afterqc, fastp, fastqc, filtlong, prinseqplusplus, pychopper, porechop, pycoqc, minionqc, anglerfish, multivcfanalyzer, clusterflow, checkqc, bcl2fastq, bclconvert, interop, ivar, flash, seqyclean, optitype, whatshap
+[2023-05-15 16:57:21,810] multiqc                                            [DEBUG  ]  Using temporary directory for creating report: /tmp/tmpdf8aki08
+[2023-05-15 16:57:21,848] multiqc                                            [INFO   ]  Search path : /home/palby/omics/input/part_1
+[2023-05-15 16:57:21,848] multiqc                                            [INFO   ]  Search path : /home/palby/omics/output/part_1
+[2023-05-15 16:57:22,760] multiqc                                            [DEBUG  ]  Summary of files that were skipped by the search: [skipped_file_contents_search_errors: 995] // [skipped_module_specific_max_filesize: 144] // [skipped_no_match: 71] // [skipped_ignore_pattern: 14] // [skipped_directory_fn_ignore_dirs: 1]
+[2023-05-15 16:57:23,017] multiqc.plots.bargraph                             [DEBUG  ]  Using matplotlib version 3.7.1
+[2023-05-15 16:57:23,017] multiqc.plots.linegraph                            [DEBUG  ]  Using matplotlib version 3.7.1
+[2023-05-15 16:57:23,018] multiqc                                            [DEBUG  ]  No samples found: custom_content
+[2023-05-15 16:57:23,026] multiqc.modules.samtools.samtools                  [INFO   ]  Found 4 stats reports
+[2023-05-15 16:57:23,029] multiqc.modules.samtools.samtools                  [INFO   ]  Found 4 flagstat reports
+[2023-05-15 16:57:23,033] multiqc.modules.bowtie2.bowtie2                    [INFO   ]  Found 4 reports
+[2023-05-15 16:57:23,038] multiqc.modules.fastqc.fastqc                      [DEBUG  ]  Skipping 'trimmed_Negative_fastqc.zip' as already parsed 'trimmed_Negative'
+[2023-05-15 16:57:23,038] multiqc.modules.fastqc.fastqc                      [DEBUG  ]  Skipping 'trimmed_N_Negative_fastqc.zip' as already parsed 'trimmed_N_Negative'
+[2023-05-15 16:57:23,038] multiqc.modules.fastqc.fastqc                      [INFO   ]  Found 2 reports
+[2023-05-15 16:57:23,077] multiqc                                            [INFO   ]  Compressing plot data
+[2023-05-15 16:57:23,107] multiqc                                            [WARNING]  Deleting    : output/part_1/multiqc_report.html   (-f was specified)
+[2023-05-15 16:57:23,108] multiqc                                            [WARNING]  Deleting    : output/part_1/multiqc_data   (-f was specified)
+[2023-05-15 16:57:23,108] multiqc                                            [INFO   ]  Report      : output/part_1/multiqc_report.html
+[2023-05-15 16:57:23,108] multiqc                                            [INFO   ]  Data        : output/part_1/multiqc_data
+[2023-05-15 16:57:23,108] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpdf8aki08/multiqc_data' to 'output/part_1/multiqc_data'
+[2023-05-15 16:57:23,169] multiqc                                            [INFO   ]  MultiQC complete
