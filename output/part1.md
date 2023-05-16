@@ -33,7 +33,7 @@ Among the output files, I have also included in the repository all BAM files and
 ## Original reads from the practical
 The FastQC report on the `Negative.fq` from the practical only flagged `Per base sequence quality` and `Per base N content`.
 
-![Per base sequence quality](./../input/part1/fastq/trimmed_Negative_fastqc/Images/per_base_quality.png)
+![Per base sequence quality](../input/part1/fastq/trimmed_Negative_fastqc/Images/per_base_quality.png)
 
 The graph clearly shows that the reads all have very high quality in all positions but the first five and last four positions.
 
