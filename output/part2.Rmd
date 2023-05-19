@@ -182,7 +182,7 @@ wilcox.test(count ~ diagnosis, data = srrm4_data)
 t.test(count ~ diagnosis, data = srrm4_data)
 ```
 One possible explanation is the type of normalization performed. The paper states:
-> Adjusted FPKMs were calculated using a regression analysis that accounts for variation derived from differences in RNA integrity, brain sample batch, sequencing depth, and 5′–3′ bias in measurements of gene-level FPKM values.
+> Adjusted FPKMs were calculated using a regression analysis that accounts for variation derived from differences in RNA integrity, brain sample batch, sequencing depth, and 5'–3' bias in measurements of gene-level FPKM values.
 
 By accounting for all these different biases, they may have been able to reduce the impact of variability unrelated to the actual biological difference between the control group and ASD individuals.
 
