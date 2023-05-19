@@ -2,15 +2,18 @@
 title: "Omics coursework - Part 2"
 author: "Alberto Locca"
 output: html_document
+runtime: shiny
 ---
 
 ```{r Setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 library(tidyr)
 library(DESeq2)
 library(dplyr)
 library(biomaRt)
 library(ggplot2)
 library(ggrepel)
+library(shiny)
 ```
 
 ## Differential expression analysis
@@ -130,23 +133,46 @@ colnames(df.plot.gene)[10] <- "gene_name"
 ### SRRM4 expression
 The following piece of code produces a boxplot similar to the one in figure 7b from Irimia *et al.*, by using the the `plotCount` function from *DESeq2* library, which by default counts that are normalized by size factor. I have chosen to leave the default setting because by accounting for sequencing depth variation it is possible to directly compare read counts among different samples.
 ```{r SRRM4, fig.height = 5, fig.width = 3, fig.align = "center"}
+# get ensembl_id from name
 srrm4_id <- df.plot.gene[df.plot.gene$gene_name == "SRRM4", ]$ensembl_id
 
+# get normalized samples data
 srrm4_data <- plotCounts(dds_DGE, srrm4_id, "diagnosis", returnData = TRUE)
 
+# plot
 q <- ggplot(srrm4_data, aes(diagnosis, count)) +
+  # boxplot
   geom_boxplot() +
+  
+  # add single points for each sample
   geom_jitter(aes(col = diagnosis), alpha = 0.4, width = 0.1) +
+  
+  # labels
   labs(
     title = "SRRM4",
     x = "Diagnosis",
     y = "Normalized count"
   ) +
+  
+  # remove legend for colour (redundant)
   guides(col = "none") +
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5))
 
 q
+```
+
+```{r Save, include=FALSE}
+# change significance breakdown for volcano plot in Shiny app
+df.plot.gene$sig <- "Inconclusive"
+df.plot.gene[df.plot.gene$log2FoldChange > 1, ]$sig <- "Upregulated"
+df.plot.gene[df.plot.gene$log2FoldChange < -1, ]$sig <- "Downregulated"
+df.plot.gene[df.plot.gene$padj > 0.05, ]$sig <- "Not significant"
+
+df.plot.gene$sig <- factor(df.plot.gene$sig, levels = c("Upregulated", "Downregulated", "Inconclusive", "Not significant"))
+
+# store objects for shiny app
+save(dds_DGE, df.plot.gene, file = "part2/dge.RData")
 ```
 
 ### Results discrepancies
@@ -171,7 +197,10 @@ Another improvement would be accounting for known confounding factors, like Irim
 Lastly, I could employ a more stringent pre-filtering step, not only based on expression (low reads number), but also on gene variability. This way, the detection of actual biological differences should be improved.
 
 ```{r Shiny}
-
+shinyAppDir(
+  "part2", 
+  options = list(launch.browser = FALSE)
+)
 ```
 
 ## References
