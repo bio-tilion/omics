@@ -1,0 +1,184 @@
+---
+title: "Omics coursework - Part 2"
+author: "Alberto Locca"
+output: html_document
+---
+
+```{r Setup, include=FALSE}
+library(tidyr)
+library(DESeq2)
+library(dplyr)
+library(biomaRt)
+library(ggplot2)
+library(ggrepel)
+```
+
+## Differential expression analysis
+I have performed differential expression analysis using DESeq2 pipeline using the following code. I have assumed that gene expression is only dependent on *diagnosis*, as per coursework instructions.
+
+```{r Differential expression analysis}
+# input count table
+df <- read.table("../input/part2/GSE64018_countlevel_12asd_12ctl_edited.txt")
+# input metadata table
+df.metadata <- read.table("../input/part2/metadata.txt")
+
+# create DESeqDataSet object
+dds <- DESeqDataSetFromMatrix(countData = df,
+                              colData = df.metadata,
+                              design= ~ diagnosis)
+
+# specify reference level ("ASD" group will be compared against control "CTL")
+dds$diagnosis <- relevel(dds$diagnosis, ref = "CTL")
+
+# filter for read with low counts (less then 10 total reads)
+dds <- dds[rowSums(counts(dds)) > 10, ]
+
+# add size factors to DataSet
+dds <- estimateSizeFactors(dds)
+
+# run DESeq pipeline for differential gene expression
+dds_DGE <- DESeq(dds)
+
+# create results table
+res <- results(dds_DGE)
+res
+```
+
+The number of genes differentially expressed with a cut-off of `adjusted p-value < 0.05` is 1236.
+```{r Genes differentially expressed}
+sum(res$padj < 0.05, na.rm=TRUE)
+```
+
+### Volcano plot
+The following code produces a volcano plot where all the differentially expressed genes are represented by red dots if they are statistically significant (adjusted p-value lower than 0.05). The top ten genes with the highest fold change -- in absolute terms, even if in this case they are all upregulated genes -- are labelled with their relative Ensembl ID, and they are slightly bigger in size for visibility.
+```{r Volcano plot, fig.align = "center"}
+# convert results to a new dataframe and removes rows with "padj" NA values 
+df.plot <- as.data.frame(res) %>% drop_na(padj)
+
+# order Dataframe by absolute log2FoldChange values in descending order
+df.plot <- df.plot[
+  order(
+    # absolute value for highest fold change in either direction
+    abs(df.plot$log2FoldChange), 
+    # descending order
+    decreasing = TRUE), ]
+
+# add column for significance label
+df.plot <- mutate(df.plot, sig=ifelse(df.plot$padj<0.05, "FDR<0.05", "Not sig"))
+
+# add column for 10 most differentially expressed genes
+top.n <- 10
+df.plot <- cbind(df.plot, top10 = "no")
+top10.index <- rownames(df.plot
+                        # filters for significant results 
+                        [df.plot$sig == "FDR<0.05",]
+                        # get first ten
+                        [1:top.n,])
+df.plot[top10.index, "top10"] <- "yes"
+
+# plot
+p <- ggplot(df.plot, aes(log2FoldChange, -log10(padj))) +
+  # point: colour by significance and size by top10 grouping
+  geom_point(aes(col=sig, size=top10)) +
+  
+  # custom colours and sizes
+  scale_color_manual(values = c("red", "black")) +
+  scale_size_manual(values = c(0.5, 2)) +
+  
+  # labels for top 10 differentially expressed genes
+  geom_text_repel(
+    data = df.plot[df.plot$top10 == "yes", ],
+    aes(label = rownames(df.plot[df.plot$top10 == "yes", ])),
+    ) +
+  theme_bw()
+
+# rename "sig" legend and remove "top10"
+p$labels$colour <- c("Significant")
+p <- p + guides(size = "none")
+
+p
+```
+
+### Name calling
+In this section I am using *Biomart* library for assigning a more user-friendly name to the genes: the `getBM` function searches the `gene` database for the Ensembl IDs and returns a table with an additional column containing the the gene names.
+```{r Gene names}
+df.plot <- cbind(df.plot, "ensembl_id" = rownames(df.plot))
+
+# Biomart database and dataset
+ensembl <- useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl")
+
+# Biomart query
+g = getBM(
+  # output
+  attributes = c(
+    "ensembl_gene_id", 
+    "external_gene_name"
+    ), 
+  # type of input
+  filters = "ensembl_gene_id", 
+  # mart object
+  mart = ensembl, 
+  # input values
+  values = df.plot$ensembl_id
+  )
+
+# merge the two dataframes
+df.plot.gene <- merge(df.plot, g, by.x = "ensembl_id", by.y = "ensembl_gene_id")
+colnames(df.plot.gene)[10] <- "gene_name"
+```
+
+### SRRM4 expression
+The following piece of code produces a boxplot similar to the one in figure 7b from Irimia *et al.*, by using the the `plotCount` function from *DESeq2* library, which by default counts that are normalized by size factor. I have chosen to leave the default setting because by accounting for sequencing depth variation it is possible to directly compare read counts among different samples.
+```{r SRRM4, fig.height = 5, fig.width = 3, fig.align = "center"}
+srrm4_id <- df.plot.gene[df.plot.gene$gene_name == "SRRM4", ]$ensembl_id
+
+srrm4_data <- plotCounts(dds_DGE, srrm4_id, "diagnosis", returnData = TRUE)
+
+q <- ggplot(srrm4_data, aes(diagnosis, count)) +
+  geom_boxplot() +
+  geom_jitter(aes(col = diagnosis), alpha = 0.4, width = 0.1) +
+  labs(
+    title = "SRRM4",
+    x = "Diagnosis",
+    y = "Normalized count"
+  ) +
+  guides(col = "none") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+q
+```
+
+### Results discrepancies
+Unlike what Irimia *et al.* show in their paper, the difference between SRRM4 expression between the control group and ASD individuals is not statistically significant -- as shown by both Mann-Whitney U test and t-test.
+```{r SRRM4 tests}
+wilcox.test(count ~ diagnosis, data = srrm4_data)
+t.test(count ~ diagnosis, data = srrm4_data)
+```
+One possible explanation is the type of normalization performed. The paper states:
+> Adjusted FPKMs were calculated using a regression analysis that accounts for variation derived from differences in RNA integrity, brain sample batch, sequencing depth, and 5′–3′ bias in measurements of gene-level FPKM values.
+
+By accounting for all these different biases, they may have been able to reduce the impact of variability unrelated to the actual biological difference between the control group and ASD individuals.
+
+Another possibility is how they have built the linear model. In my model, gene expression is only dependant on `diagnosis`, whether in the authors' is dependent also on sex, age, brain bank origin, RIN, and the two PCA components -- see `input/part2/GSE64018_FPKMnormalization.R`, line 49.
+
+
+### How to improve
+Given that this work was from human samples -- which may differ a lot biologically -- and that sequencing statistics reported in the `metadata.txt` file show variations across the samples, one reasonable approach would be to add more sample to the analysis. In this case increasing the sample size may be difficult because of the type of pathology and brain tissue, but it may be possible to combine this dataset with others from publicly available data.
+
+Another improvement would be accounting for known confounding factors, like Irimia *et al.* with the regression analysis mentioned above. By reading the paper's material and methods and trying to reproduce the pipeline the authors implemented, it should be possible to lessen the impact of other technical biases I haven't accounted for in this very simple analysis.
+
+Lastly, I could employ a more stringent pre-filtering step, not only based on expression (low reads number), but also on gene variability. This way, the detection of actual biological differences should be improved.
+
+```{r Shiny}
+
+```
+
+## References
+Irimia, M., Weatheritt, R. J., Ellis, J. D., Parikshak, N. N., Gonatopoulos-Pournatzis, T., Babor, M., Quesnel-Vallières, M., Tapial, J., Raj, B., O'Hanlon, D., Barrios-Rodiles, M., Sternberg, M. J., Cordes, S. P., Roth, F. P., Wrana, J. L., Geschwind, D. H., & Blencowe, B. J. (2014). A highly conserved program of neuronal microexons is misregulated in autistic brains. *Cell*, 159(7), 1511–1523. [DOI](https://doi.org/10.1016/j.cell.2014.11.035)
+
+## Session info
+```{r Session info}
+sI <- sessionInfo()
+print(sI, locale = FALSE)
+```
